@@ -1,6 +1,6 @@
 <launch>
   <group ns="test_launch">
-    <node pkg="trikroscpp" name="NAME" type="talker"/>
+    <node pkg="trikroscpp" name="NAME" type="trikroscpp_node"/>
   </group>
 </launch>
 

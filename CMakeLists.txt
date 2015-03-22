@@ -75,9 +75,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  CATKIN_DEPENDS roscpp std_msgs
-)
+catkin_package()
 
 ###########
 ## Build ##
@@ -86,21 +84,23 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
 ## Declare a cpp library
 # add_library(trikroscpp
 #   src/${PROJECT_NAME}/trikroscpp.cpp
 # )
 
 ## Declare a cpp executable
-add_executable(talker src/talker.cpp)
+add_executable(trikroscpp_node src/talker.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(trikroscpp_node trikroscpp_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(talker
+target_link_libraries(trikroscpp_node
   ${catkin_LIBRARIES}
 )
 
@@ -119,9 +119,9 @@ target_link_libraries(talker
 # )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS talker
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+install(TARGETS trikroscpp_node
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
@@ -134,7 +134,7 @@ install(TARGETS talker
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 #############
