@@ -1,0 +1,6 @@
+<launch>
+  <group ns="talker_launch">
+    <node pkg="trikroscpp" name="NAME" type="talker.py"/>
+  </group>
+</launch>
+
