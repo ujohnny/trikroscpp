@@ -93,7 +93,7 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-add_executable(trikroscpp_node src/talker.cpp)
+add_executable(trikroscpp_node src/trikroscpp_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -113,10 +113,10 @@ target_link_libraries(trikroscpp_node
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(PROGRAMS
+  scripts/talker.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables and/or libraries for installation
 install(TARGETS trikroscpp_node

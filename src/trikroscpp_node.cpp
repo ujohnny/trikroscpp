@@ -50,7 +50,7 @@ int main(int argc, char **argv)
    * part of the ROS system.
    */
 // %Tag(INIT)%
-  ros::init(argc, argv, "talker");
+  ros::init(argc, argv, "trikroscpp_node");
 // %EndTag(INIT)%
 
   /**
