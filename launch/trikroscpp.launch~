@@ -1,0 +1,6 @@
+<launch>
+  <group ns="test_laptop">
+    <node pkg="trikroscpp" name="sim" type="talker"/>
+  </group>
+</launch>
+

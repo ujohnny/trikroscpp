@@ -1,0 +1,6 @@
+<launch>
+  <group ns="test_launch">
+    <node pkg="trikroscpp" name="NAME" type="talker"/>
+  </group>
+</launch>
+
