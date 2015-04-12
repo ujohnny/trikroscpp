@@ -6,10 +6,6 @@ project(trikroscpp)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS roscpp std_msgs)
 
-find_library(TRIK_CONTROL_LIB
-  trikControl
-)
-
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -107,7 +103,7 @@ add_executable(trikroscpp_node src/trikroscpp_node.cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(trikroscpp_node
   ${catkin_LIBRARIES}
-  ${TRIK_CONTROL_LIB}
+  trikControl
 )
 
 #############
