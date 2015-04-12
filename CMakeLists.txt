@@ -87,6 +87,7 @@ catkin_package()
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${TRIKINC}
+  ${QT}
 )
 ## Declare a cpp library
 # add_library(trikroscpp
@@ -104,6 +105,9 @@ add_executable(trikroscpp_node src/trikroscpp_node.cpp)
 target_link_libraries(trikroscpp_node
   ${catkin_LIBRARIES}
   trikControl
+  trikKernel
+  qslog
+  QtCoreE
 )
 
 #############
