@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs)
 
 find_library(TRIK_CONTROL_LIB
   trikControl
-  ${TRIKLIB}
 )
 
 ## System dependencies are found with CMake's conventions
