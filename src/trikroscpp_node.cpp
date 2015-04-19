@@ -4,7 +4,7 @@
 
 #include <trikControl/brick.h>
 #include <QtGui/QApplication>
-#include <QDir>
+#include <QtCore/QDir>
 
 int main(int argc, char **argv)
 {
