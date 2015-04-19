@@ -16,8 +16,8 @@ int main(int argc, char **argv)
 
   ROS_INFO("%p\n", app.thread());
   trikControl::Brick *b = new trikControl::Brick(*app.thread()
-				    , "./", "./");
-
+						 , "./", "./");
+  int count = 0;
   trikControl::Led *led = b->led();
 
   while (ros::ok())
