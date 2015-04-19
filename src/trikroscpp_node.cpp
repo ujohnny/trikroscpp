@@ -4,6 +4,7 @@
 
 #include <trikControl/brick.h>
 #include <QtGui/QApplication>
+#include <QDir>
 
 int main(int argc, char **argv)
 {
@@ -16,7 +17,7 @@ int main(int argc, char **argv)
 
   ROS_INFO("%p\n", app.thread());
   trikControl::Brick *b = new trikControl::Brick(*app.thread()
-						 , "./", "./");
+						 , QDir::currentPath(), QDir::currentPath());
   int count = 0;
   trikControl::Led *led = b->led();
 
