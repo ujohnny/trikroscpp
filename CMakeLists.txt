@@ -108,6 +108,7 @@ target_link_libraries(trikroscpp_node
   trikKernel
   qslog
   QtCoreE
+  QtGuiE
 )
 
 #############

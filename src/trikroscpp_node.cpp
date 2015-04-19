@@ -3,7 +3,7 @@
 #include <sstream>
 
 #include <trikControl/brick.h>
-#include <QtWidgets/QApplication>
+#include <QtGui/QApplication>
 
 int main(int argc, char **argv)
 {
@@ -15,10 +15,10 @@ int main(int argc, char **argv)
   ros::Rate loop_rate(2);
 
   ROS_INFO("%p\n", app.thread());
-  trikControl::Brick *b = new Brick(*app.thread()
-				    , "./system-config.xml", "./");
+  trikControl::Brick *b = new trikControl::Brick(*app.thread()
+				    , "./", "./");
 
-  trikControl::Led *l = b->led();
+  trikControl::Led *led = b->led();
 
   while (ros::ok())
   {
