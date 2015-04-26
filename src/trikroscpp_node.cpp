@@ -18,7 +18,8 @@ int main(int argc, char **argv)
   ROS_INFO("%p\n", app.thread());
   //  ROS_INFO("%s\n", QDir::currentPath());
   trikControl::Brick *b = new trikControl::Brick(*app.thread()
-						 , QDir::currentPath() + '/', QDir::currentPath() + '/');
+						 //QDir::currentPath() + '/', QDir::currentPath() + '/');
+						 "", "");
   int count = 0;
   trikControl::Led *led = b->led();
 
