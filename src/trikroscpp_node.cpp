@@ -16,7 +16,7 @@ int main(int argc, char **argv)
   ros::Rate loop_rate(2);
 
   ROS_INFO("%p\n", app.thread());
-  ROS_INFO("%s\n", QDir::currentPath());
+  //  ROS_INFO("%s\n", QDir::currentPath());
   trikControl::Brick *b = new trikControl::Brick(*app.thread()
 						 , QDir::currentPath() + '/', QDir::currentPath() + '/');
   int count = 0;
