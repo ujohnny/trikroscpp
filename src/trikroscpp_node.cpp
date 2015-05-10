@@ -18,20 +18,20 @@ const int queue_length = 1000;
 
 class Handle {
 public:
-  Handle(const trikControl::DeviceInterface *device,
+  Handle(trikControl::DeviceInterface * const device,
 	 const std::string& port) :
     device_(device),
     port_(port)
   {}
 
 protected:
-  const trikControl::DeviceInterface *device_;
+  trikControl::DeviceInterface * const device_;
   const std::string port_;
 };
 
 class Publisher {
 public:
-  virtual void publish() = 0;
+  virtual void publish() const = 0;
 protected:
   ros::Publisher pub_;
 };
@@ -45,7 +45,7 @@ protected:
 class MotorHandle : public Handle, public Subscriber {
 public:
   // need to change this
-  MotorHandle(const trikControl::MotorInterface *device,
+  MotorHandle(trikControl::MotorInterface * const device,
 	      const std::string& port) :
     Handle(device, port),
     motor_(device)
@@ -59,22 +59,23 @@ public:
 			      &MotorHandle::handle, this);
   }
 
-  void handle(const std_msgs::Int32::ConstPtr& msg) const {
+  void handle(const std_msgs::Int32::ConstPtr& msg) {
     this->motor_->setPower(msg->data);
   }
+
 private:
-  const trikControl::MotorInterface *motor_;
+  trikControl::MotorInterface * const motor_;
 };
 
 class SensorHandle : public Handle, public Publisher {
 public:
-  SensorHandle(const trikControl::SensorInterface *device,
+  SensorHandle(trikControl::SensorInterface * const device,
               const std::string& port) :
     Handle(device, port),
     sensor_(device)
   {}
 
-  void init(const ros::NodeHandle& nh) {
+  void init(ros::NodeHandle& nh) {
     std::stringstream name;
     name << "sensor_" << this->port_;
 
@@ -88,7 +89,7 @@ public:
   }
 
 private:
-  const trikControl::SensorInterface *sensor_;
+  trikControl::SensorInterface * const sensor_;
 };
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
