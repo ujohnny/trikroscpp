@@ -1,13 +1,16 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Int32.h"
+
 #include <sstream>
+#include <functional>
 
 #include <trikControl/brickFactory.h>
 #include <trikControl/brickInterface.h>
 #include <trikControl/ledInterface.h>
 
 #include <QtGui/QApplication>
+
 int qtargc = 2;
 char *qtargv[] = {"trikroscpp_node", "-qws"};
 
@@ -46,15 +49,16 @@ public:
     std::stringstream name;
     name << "motor_" << this->port_;
 
-    this->sub_ = nh.subscribe(name.str(), queue_length, handle);
+    this->sub_ = nh.subscribe(name.str(), queue_length, 
+			      std::bind(&MotorHandle::handle, this));
   }
 
   void handle(const std_msgs::Int32::ConstPtr& msg) {
-    this.device_->setPower(msg.data);
+    this->device_->setPower(msg->data);
   }
 };
 
-class SensorHandle : public Handle, public Puslisher {
+class SensorHandle : public Handle, public Publisher {
   void init(ros::NodeHandle &nh) {
     std::stringstream name;
     name << "sensor_" << this->port_;
@@ -65,7 +69,7 @@ class SensorHandle : public Handle, public Puslisher {
   void publish() {
     std_msgs::Int32 msg;
     msg.data = device_->read();
-    this->pub.publish(msg);
+    this->pub_.publish(msg);
   }
 }
 
