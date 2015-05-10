@@ -16,8 +16,12 @@ const int queue_length = 1000;
 
 class Handle {
 public:
-  virtual void publish() = 0;
-  
+  Handle(trikControl::DeviceInterface *device,
+	 std::string port) :
+    device_(device),
+    port_(port)
+  {}
+
 private:
   trikControl::DeviceInterface *device_;
   std::string port_;
@@ -38,17 +42,11 @@ private:
 
 class MotorHandle : public Handle, public Subscriber {
 public:
-  MotorHandle(trikControl::MotorInterface *motor,
-	      std::string port) :
-    device_(motor),
-    port_(port)
-  {}
-  
   void init(ros::NodeHandle &nh) { 
     std::stringstream name;
     name << "motor_" << this->port_;
 
-    this->sub_ = nh.subscribe(name.str(), queue_length, MotorHandle::handle);
+    this->sub_ = nh.subscribe(name.str(), queue_length, handle);
   }
 
   void handle(const std_msgs::Int32::ConstPtr& msg) {
@@ -57,12 +55,6 @@ public:
 };
 
 class SensorHandle : public Handle, public Puslisher {
-  SensorHandle(trikControl::SensorInterface *sensor,
-	       std::string port) :
-    device_(sensor),
-    port(port_)
-  {}
-
   void init(ros::NodeHandle &nh) {
     std::stringstream name;
     name << "sensor_" << this->port_;
