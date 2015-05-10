@@ -51,7 +51,7 @@ public:
     motor_(device)
   {}
   
-  void init(const ros::NodeHandle& nh) { 
+  void init(ros::NodeHandle& nh) { 
     std::stringstream name;
     name << "motor_" << this->port_;
     
@@ -120,7 +120,7 @@ int main(int argc, char **argv)
 
   std::vector<Publisher> publishers;
   // init 
-  const QStringList sensors = brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor);
+  const QStringList& sensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor));
   for (QStringList::const_iterator it = sensors.begin(); it != sensors.end(); ++it) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
     trikControl::SensorInterface *sns = brick->sensor(*it);
@@ -146,8 +146,8 @@ int main(int argc, char **argv)
 
   while (ros::ok())
   {
-    for (SensorHandle& sh : vsh) {
-      publishers.publish();
+    for (Publisher& sh : publishers) {
+      sh.publish();
     }
     ros::spinOnce();
     loop_rate.sleep();
