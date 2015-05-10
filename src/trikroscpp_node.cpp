@@ -111,14 +111,14 @@ int main(int argc, char **argv)
 
   QApplication app(qtargc, qtargv);
   ros::NodeHandle n;
-  ros::Rate loop_rate(1);
+  ros::Rate loop_rate(10);
 
   const int queue_length = 1000;
   ros::Subscriber sub = n.subscribe("trikLed", queue_length, ledCallback);
 
   brick = trikControl::BrickFactory::create(".", ".");
 
-  std::vector<SensorHandle> vsh;
+  std::vector<Publisher> publishers;
   // init 
   const QStringList sensors = brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor);
   for (QStringList::const_iterator it = sensors.begin(); it != sensors.end(); ++it) {
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
       SensorHandle sh(sns, it->toStdString());
       sh.init(n);
-      vsh.push_back(sh);
+      publishers.push_back(sh);
     }
   }
   
@@ -140,14 +140,14 @@ int main(int argc, char **argv)
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
       SensorHandle sh(sns, it->toStdString());
       sh.init(n);
-      vsh.push_back(sh);
+      publishers.push_back(sh);
     }
   }
 
   while (ros::ok())
   {
     for (SensorHandle& sh : vsh) {
-      sh.publish();
+      publishers.publish();
     }
     ros::spinOnce();
     loop_rate.sleep();
