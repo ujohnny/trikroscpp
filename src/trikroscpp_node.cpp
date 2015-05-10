@@ -1,9 +1,8 @@
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "std_msgs/Int32.h"
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <std_msgs/Int32.h>
 
 #include <sstream>
-#include <functional>
 
 #include <trikControl/brickFactory.h>
 #include <trikControl/brickInterface.h>
@@ -47,12 +46,12 @@ class MotorHandle : public Handle, public Subscriber {
 public:
   // need to change this
   MotorHandle(trikControl::MotorInterface *device,
-	      std::string port) :
+	      std::string& port) :
     Handle(device, port),
     motor_(device)
   {}
   
-  void init(ros::NodeHandle &nh) { 
+  void init(ros::NodeHandle& nh) { 
     std::stringstream name;
     name << "motor_" << this->port_;
     
@@ -70,12 +69,12 @@ private:
 class SensorHandle : public Handle, public Publisher {
 public:
   SensorHandle(trikControl::SensorInterface *device,
-              std::string port) :
+              std::string& port) :
     Handle(device, port),
     sensor_(device)
   {}
 
-  void init(ros::NodeHandle &nh) {
+  void init(ros::NodeHandle& nh) {
     std::stringstream name;
     name << "sensor_" << this->port_;
 
@@ -146,7 +145,7 @@ int main(int argc, char **argv)
 
   while (ros::ok())
   {
-    for (SensorHandle &sh : vsh) {
+    for (SensorHandle& sh : vsh) {
       sh.publish();
     }
     ros::spinOnce();
