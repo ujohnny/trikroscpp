@@ -68,6 +68,7 @@ private:
 };
 
 class SensorHandle : public Handle, public Publisher {
+public:
   SensorHandle(trikControl::SensorInterface *device,
               std::string port) :
     Handle(device, port),
@@ -124,7 +125,7 @@ int main(int argc, char **argv)
   for (QStringList::const_iterator it = sensors.begin(); it != sensors.end(); ++it) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
     trikControl::SensorInterface *sns = brick->sensor(*it);
-    if (sns->status == trikControl::DeviceInterface::Status::ready) {
+    if (sns->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
       SensorHandle sh(sns, it->toStdString());
       sh.init(n);
