@@ -30,12 +30,12 @@ protected:
 class Publisher {
 public:
   virtual void publish() = 0;
-private:
+protected:
   ros::Publisher pub_;
 };
 
 class Subscriber {
-private:
+protected:
   virtual void handle() = 0;
   ros::Subscriber sub_;
 };
