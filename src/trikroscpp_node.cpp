@@ -18,15 +18,15 @@ const int queue_length = 1000;
 
 class Handle {
 public:
-  Handle(trikControl::DeviceInterface *device,
-	 std::string port) :
+  Handle(const trikControl::DeviceInterface *device,
+	 const std::string& port) :
     device_(device),
     port_(port)
   {}
 
 protected:
-  trikControl::DeviceInterface *device_;
-  std::string port_;
+  const trikControl::DeviceInterface *device_;
+  const std::string port_;
 };
 
 class Publisher {
@@ -45,13 +45,13 @@ protected:
 class MotorHandle : public Handle, public Subscriber {
 public:
   // need to change this
-  MotorHandle(trikControl::MotorInterface *device,
-	      std::string& port) :
+  MotorHandle(const trikControl::MotorInterface *device,
+	      const std::string& port) :
     Handle(device, port),
     motor_(device)
   {}
   
-  void init(ros::NodeHandle& nh) { 
+  void init(const ros::NodeHandle& nh) { 
     std::stringstream name;
     name << "motor_" << this->port_;
     
@@ -59,36 +59,36 @@ public:
 			      &MotorHandle::handle, this);
   }
 
-  void handle(const std_msgs::Int32::ConstPtr& msg) {
+  void handle(const std_msgs::Int32::ConstPtr& msg) const {
     this->motor_->setPower(msg->data);
   }
 private:
-  trikControl::MotorInterface *motor_;
+  const trikControl::MotorInterface *motor_;
 };
 
 class SensorHandle : public Handle, public Publisher {
 public:
-  SensorHandle(trikControl::SensorInterface *device,
-              std::string& port) :
+  SensorHandle(const trikControl::SensorInterface *device,
+              const std::string& port) :
     Handle(device, port),
     sensor_(device)
   {}
 
-  void init(ros::NodeHandle& nh) {
+  void init(const ros::NodeHandle& nh) {
     std::stringstream name;
     name << "sensor_" << this->port_;
 
     this->pub_ = nh.advertise<std_msgs::Int32>(name.str(), queue_length);
   }
 
-  void publish() {
+  void publish() const {
     std_msgs::Int32 msg;
     msg.data = sensor_->read();
     this->pub_.publish(msg);
   }
 
 private:
-  trikControl::SensorInterface *sensor_;
+  const trikControl::SensorInterface *sensor_;
 };
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
