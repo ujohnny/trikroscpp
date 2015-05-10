@@ -6,8 +6,8 @@
 #include <trikControl/brickInterface.h>
 #include <trikControl/ledInterface.h>
 #include <QtGui/QApplication>
-const int qtargc = 2;
-const char * const qtargv[] = {"trikroscpp_node", "-qws"};
+int qtargc = 2;
+char * qtargv[] = {"trikroscpp_node", "-qws"};
 
 int main(int argc, char **argv)
 {
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
   trikControl::BrickInterface *brick = trikControl::BrickFactory::create(".", ".");
 
   int count = 0;
-  trikControl::LedInterface *led = b->led();
+  trikControl::LedInterface *led = brick->led();
 
   while (ros::ok())
   {
