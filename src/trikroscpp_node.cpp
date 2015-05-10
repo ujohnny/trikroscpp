@@ -64,7 +64,7 @@ public:
     this->motor_->setPower(msg->data);
   }
 private:
-  trikControl::MotorInterface motor_;
+  trikControl::MotorInterface *motor_;
 };
 
 class SensorHandle : public Handle, public Publisher {
