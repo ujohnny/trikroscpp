@@ -2,24 +2,26 @@
 #include "std_msgs/String.h"
 #include <sstream>
 
-#include <trikControl/brick.h>
+#include <trikControl/brickFactory.h>
+#include <trikControl/brickInterface.h>
+#include <trikControl/led.h>
 #include <QtGui/QApplication>
-#include <QtCore/QDir>
+const int qtargc = 2;
+const char * const qtargv[] = {"trikroscpp_node", "-qws"};
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "trikroscpp_node");
 
-  QApplication app(argc, argv);
+  QApplication app(qtargc, qtargv);
   ros::NodeHandle n;
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
   ros::Rate loop_rate(2);
 
   ROS_INFO("%p\n", app.thread());
-  //  ROS_INFO("%s\n", QDir::currentPath());
-  trikControl::Brick *b = new trikControl::Brick(*app.thread(), 
-						 //QDir::currentPath() + '/', QDir::currentPath() + '/');
-						 "", "");
+
+  trikControl::BrickInterface *brick = trikControl::BrickFactory::create(".", ".");
+
   int count = 0;
   trikControl::Led *led = b->led();
 
