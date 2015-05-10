@@ -46,7 +46,7 @@ protected:
 class MotorHandle : public Handle, public Subscriber {
 public:
   // need to change this
-  MotorHandle(trikControl::DeviceInterface *device,
+  MotorHandle(trikControl::MotorInterface *device,
 	      std::string port) :
     Handle(device, port),
     motor_(device)
@@ -68,7 +68,7 @@ private:
 };
 
 class SensorHandle : public Handle, public Publisher {
-  SensorHandle(trikControl::DeviceInterface *device,
+  SensorHandle(trikControl::SensorInterface *device,
               std::string port) :
     Handle(device, port),
     sensor_(device)
@@ -89,7 +89,7 @@ class SensorHandle : public Handle, public Publisher {
 
 private:
   trikControl::SensorInterface *sensor_;
-}
+};
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
   ROS_INFO("I heard: [%s]", msg->data.c_str());
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
   brick = trikControl::BrickFactory::create(".", ".");
 
   // init 
-  const QStringList sensors = brick->sensorPorts();
+  const QStringList sensors = brick->sensorPorts(SensorInterface::Type::analogSensor);
   for (QStringList::const_iterator it = sensors.begin(); it != sensors.end(); ++it) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
   }
