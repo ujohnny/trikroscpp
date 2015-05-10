@@ -35,7 +35,7 @@ int main(int argc, char **argv)
   ros::Rate loop_rate(2);
 
   const int queue_length = 1000;
-  ros::Subscriber sub = n.subscribe("trikLed", queue_length, ledCallback);
+  //  ros::Subscriber sub = n.subscribe("trikLed", queue_length, ledCallback);
 
   brick = trikControl::BrickFactory::create(".", ".");
 
