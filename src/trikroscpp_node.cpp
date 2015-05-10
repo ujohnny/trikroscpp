@@ -119,8 +119,8 @@ int main(int argc, char **argv) {
 
   std::vector<SensorHandle> vsh;
   // init 
-  QStringList& sensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor));
-  for (QStringList::const_iterator it = sensors.begin(); it != sensors.end(); ++it) {
+  const QStringList& asensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor));
+  for (QStringList::const_iterator it = asensors.begin(); it != asensors.end(); ++it) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
     trikControl::SensorInterface *sns = brick->sensor(*it);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
@@ -131,8 +131,8 @@ int main(int argc, char **argv) {
     }
   }
   
-  sensors = brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor);
-  for (QStringList::const_iterator it = sensors.begin(); it != sensors.end(); ++it) {
+  const QStringList& dsensors = brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor);
+  for (QStringList::const_iterator it = dsensors.begin(); it != dsensors.end(); ++it) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
     trikControl::SensorInterface *sns = brick->sensor(*it);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
