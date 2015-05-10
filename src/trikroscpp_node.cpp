@@ -39,6 +39,7 @@ int main(int argc, char **argv)
 
   brick = trikControl::BrickFactory::create(".", ".");
 
+  int count = 0;
   trikControl::LedInterface *led = brick->led();
 
   while (ros::ok())
