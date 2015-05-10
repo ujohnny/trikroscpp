@@ -22,7 +22,7 @@ public:
     port_(port)
   {}
 
-private:
+protected:
   trikControl::DeviceInterface *device_;
   std::string port_;
 };
