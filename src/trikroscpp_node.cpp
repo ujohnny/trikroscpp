@@ -119,7 +119,7 @@ int main(int argc, char **argv)
   brick = trikControl::BrickFactory::create(".", ".");
 
   // init 
-  const QStringList sensors = brick->sensorPorts(SensorInterface::Type::analogSensor);
+  const QStringList sensors = brick->sensorPorts(trikControl::SensorInterface::analogSensor);
   for (QStringList::const_iterator it = sensors.begin(); it != sensors.end(); ++it) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
   }
