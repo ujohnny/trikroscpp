@@ -45,20 +45,35 @@ protected:
 
 class MotorHandle : public Handle, public Subscriber {
 public:
+  // need to change this
+  MotorHandle(trikControl::DeviceInterface *device,
+	      std::string port) :
+    Handle(device, port),
+    motor_(device)
+  {}
+  
   void init(ros::NodeHandle &nh) { 
     std::stringstream name;
     name << "motor_" << this->port_;
-
+    
     this->sub_ = nh.subscribe(name.str(), queue_length, 
-			      std::bind(&MotorHandle::handle, this));
+			      boost::bind(&MotorHandle::handle, this));
   }
 
   void handle(const std_msgs::Int32::ConstPtr& msg) {
-    this->device_->setPower(msg->data);
+    this->motor_->setPower(msg->data);
   }
+private:
+  trikControl::MotorInterface motor_;
 };
 
 class SensorHandle : public Handle, public Publisher {
+  SensorHandle(trikControl::DeviceInterface *device,
+              std::string port) :
+    Handle(device, port),
+    sensor_(device)
+  {}
+
   void init(ros::NodeHandle &nh) {
     std::stringstream name;
     name << "sensor_" << this->port_;
@@ -68,9 +83,12 @@ class SensorHandle : public Handle, public Publisher {
 
   void publish() {
     std_msgs::Int32 msg;
-    msg.data = device_->read();
+    msg.data = sensor_->read();
     this->pub_.publish(msg);
   }
+
+private:
+  trikControl::SensorInterface *sensor_;
 }
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {

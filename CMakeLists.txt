@@ -7,7 +7,7 @@ project(trikroscpp)
 find_package(catkin REQUIRED COMPONENTS roscpp std_msgs)
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -88,6 +88,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${TRIKINC}
   ${QT}
+  ${Boost_INCLUDE_DIRS}
 )
 ## Declare a cpp library
 # add_library(trikroscpp
@@ -109,6 +110,7 @@ target_link_libraries(trikroscpp_node
   qslog
   QtCoreE
   QtGuiE
+  ${Boost_LIBRARIES}
 )
 
 #############
