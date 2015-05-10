@@ -111,7 +111,6 @@ int main(int argc, char **argv)
 
   QApplication app(qtargc, qtargv);
   ros::NodeHandle n;
-  ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
   ros::Rate loop_rate(1);
 
   const int queue_length = 1000;
@@ -133,14 +132,12 @@ int main(int argc, char **argv)
     }
   }
   
-  int count = 0;
-  trikControl::LedInterface *led = brick->led();
 
   while (ros::ok())
   {
-    std_msgs::String msg;
-
-    chatter_pub.publish(msg);
+    for (SensorHandle &sh : vsh) {
+      sh.publish();
+    }
     ros::spinOnce();
     loop_rate.sleep();
   }
