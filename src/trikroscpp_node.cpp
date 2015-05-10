@@ -57,7 +57,7 @@ public:
     name << "motor_" << this->port_;
     
     this->sub_ = nh.subscribe(name.str(), queue_length, 
-			      boost::bind(&MotorHandle::handle, this));
+			      &MotorHandle::handle, this);
   }
 
   void handle(const std_msgs::Int32::ConstPtr& msg) {
