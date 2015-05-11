@@ -26,7 +26,7 @@ protected:
 template<typename T>
 class Subscriber {
 protected:
-  virtual void handle(T::ConstPtr& msg) = 0;
+  virtual void handle(typename T::ConstPtr& msg) = 0;
   ros::Subscriber sub_;
 };
 
@@ -129,26 +129,26 @@ int main(int argc, char **argv) {
     }
   }
 
-  std::vector<MotorHandle> vm;
-  const QStringList& pmotors = brick->motorPorts(trikControl::MotorInterface:Type::powerMotor);
+  std::vector<MotorHandle *> vm;
+  const QStringList& pmotors = brick->motorPorts(trikControl::MotorInterface::Type::powerMotor);
   for (QStringList::const_iterator it = pmotors.begin(); it != pmotors.end(); ++it) {
     ROS_INFO("MOTOR: [%s]", it->toStdString().c_str());
     trikControl::MotorInterface *mi = brick->motor(*it);
     if (mi->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
-      MotorHandle mh(mi);
+      MotorHandle *mh = new MotorHandle(mi);
       mh.init(n, it->toStdString());
       vm.push_back(mh)
     }
   }
 
-  const QStringList& smotors = brick->motorPorts(trikControl::MotorInterface:Type::servoMotor);
+  const QStringList& smotors = brick->motorPorts(trikControl::MotorInterface::Type::servoMotor);
   for (QStringList::const_iterator it = smotors.begin(); it != smotors.end(); ++it) {
     ROS_INFO("MOTOR: [%s]", it->toStdString().c_str());
     trikControl::MotorInterface *mi = brick->motor(*it);
     if (mi->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
-      MotorHandle mh(mi);
+      MotorHandle *mh = new MotorHandle(mi);
       mh.init(n, it->toStdString());
       vm.push_back(mh)
     }
