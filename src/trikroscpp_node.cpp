@@ -30,8 +30,7 @@ protected:
   ros::Subscriber sub_;
 };
 
-template<>
-class MotorHandle : public Subscriber<std_msgs::Int32> {
+class MotorHandle {
 public:
   // need to change this
   MotorHandle(trikControl::MotorInterface * const device) :
