@@ -23,13 +23,15 @@ protected:
   ros::Publisher pub_;
 };
 
+template<typename T>
 class Subscriber {
 protected:
-  virtual void handle() = 0;
+  virtual void handle(T::ConstPtr& msg) = 0;
   ros::Subscriber sub_;
 };
 
-class MotorHandle : public Subscriber {
+template<>
+class MotorHandle : public Subscriber<std_msgs::Int32> {
 public:
   // need to change this
   MotorHandle(trikControl::MotorInterface * const device) :
@@ -44,6 +46,7 @@ public:
 			      &MotorHandle::handle, this);
   }
 
+protected:
   void handle(const std_msgs::Int32::ConstPtr& msg) {
     this->motor_->setPower(msg->data);
   }
