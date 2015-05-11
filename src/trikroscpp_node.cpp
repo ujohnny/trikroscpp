@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
       ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
       MotorHandle *mh = new MotorHandle(mi);
       mh.init(n, it->toStdString());
-      vm.push_back(mh)
+      vm.push_back(mh);
     }
   }
 
@@ -150,7 +150,7 @@ int main(int argc, char **argv) {
       ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
       MotorHandle *mh = new MotorHandle(mi);
       mh.init(n, it->toStdString());
-      vm.push_back(mh)
+      vm.push_back(mh);
     }
   }
 
