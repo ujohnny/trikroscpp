@@ -23,14 +23,12 @@ protected:
   ros::Publisher pub_;
 };
 
-template<typename T>
 class Subscriber {
 protected:
-  virtual void handle(typename T::ConstPtr& msg) = 0;
   ros::Subscriber sub_;
 };
 
-class MotorHandle {
+class MotorHandle : public Subscriber {
 public:
   // need to change this
   MotorHandle(trikControl::MotorInterface * const device) :
@@ -136,7 +134,7 @@ int main(int argc, char **argv) {
     if (mi->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
       MotorHandle *mh = new MotorHandle(mi);
-      mh.init(n, it->toStdString());
+      mh->init(n, it->toStdString());
       vm.push_back(mh);
     }
   }
@@ -148,7 +146,7 @@ int main(int argc, char **argv) {
     if (mi->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
       MotorHandle *mh = new MotorHandle(mi);
-      mh.init(n, it->toStdString());
+      mh->init(n, it->toStdString());
       vm.push_back(mh);
     }
   }
