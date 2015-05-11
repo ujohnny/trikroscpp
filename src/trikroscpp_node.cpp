@@ -16,19 +16,6 @@ char *qtargv[] = {"trikroscpp_node", "-qws"};
 trikControl::BrickInterface *brick;
 const int queue_length = 1000;
 
-class Handle {
-public:
-  Handle(trikControl::DeviceInterface * const device,
-	 const std::string& port) :
-    device_(device),
-    port_(port)
-  {}
-
-protected:
-  trikControl::DeviceInterface * const device_;
-  const std::string port_;
-};
-
 class Publisher {
 public:
   virtual void publish() const = 0;
@@ -42,18 +29,16 @@ protected:
   ros::Subscriber sub_;
 };
 
-class MotorHandle : public Handle, public Subscriber {
+class MotorHandle : public Subscriber {
 public:
   // need to change this
-  MotorHandle(trikControl::MotorInterface * const device,
-	      const std::string& port) :
-    Handle(device, port),
+  MotorHandle(trikControl::MotorInterface * const device) :
     motor_(device)
   {}
   
-  void init(ros::NodeHandle& nh) { 
+  void init(ros::NodeHandle& nh, const std::string& port) { 
     std::stringstream name;
-    name << "motor_" << this->port_;
+    name << "motor_" << port;
     
     this->sub_ = nh.subscribe(name.str(), queue_length, 
 			      &MotorHandle::handle, this);
@@ -67,17 +52,15 @@ private:
   trikControl::MotorInterface * const motor_;
 };
 
-class SensorHandle : public Handle, public Publisher {
+class SensorHandle : public Publisher {
 public:
-  SensorHandle(trikControl::SensorInterface * const device,
-              const std::string& port) :
-    Handle(device, port),
+  SensorHandle(trikControl::SensorInterface * const device) :
     sensor_(device)
   {}
 
-  void init(ros::NodeHandle& nh) {
+  void init(ros::NodeHandle& nh, const std::string& port) { 
     std::stringstream name;
-    name << "sensor_" << this->port_;
+    name << "sensor_" << port;
 
     this->pub_ = nh.advertise<std_msgs::Int32>(name.str(), queue_length);
   }
@@ -125,8 +108,8 @@ int main(int argc, char **argv) {
     trikControl::SensorInterface *sns = brick->sensor(*it);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
-      SensorHandle sh(sns, it->toStdString());
-      sh.init(n);
+      SensorHandle sh(sns);
+      sh.init(n, it->toStdString());
       vsh.push_back(sh);
     }
   }
@@ -137,9 +120,34 @@ int main(int argc, char **argv) {
     trikControl::SensorInterface *sns = brick->sensor(*it);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
-      SensorHandle sh(sns, it->toStdString());
-      sh.init(n);
+      SensorHandle sh(sns);
+      sh.init(n, it->toStdString());
       vsh.push_back(sh);
+    }
+  }
+
+  std::vector<MotorHandle> vm;
+  const QStringList& pmotors = brick->motorPorts(trikControl::MotorInterface:Type::powerMotor);
+  for (QStringList::const_iterator it = pmotors.begin(); it != pmotors.end(); ++it) {
+    ROS_INFO("MOTOR: [%s]", it->toStdString().c_str());
+    trikControl::MotorInterface *mi = brick->motor(*it);
+    if (mi->status() == trikControl::DeviceInterface::Status::ready) {
+      ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
+      MotorHandle mh(mi);
+      mh.init(n, it->toStdString());
+      vm.push_back(mh)
+    }
+  }
+
+  const QStringList& smotors = brick->motorPorts(trikControl::MotorInterface:Type::servoMotor);
+  for (QStringList::const_iterator it = smotors.begin(); it != smotors.end(); ++it) {
+    ROS_INFO("MOTOR: [%s]", it->toStdString().c_str());
+    trikControl::MotorInterface *mi = brick->motor(*it);
+    if (mi->status() == trikControl::DeviceInterface::Status::ready) {
+      ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
+      MotorHandle mh(mi);
+      mh.init(n, it->toStdString());
+      vm.push_back(mh)
     }
   }
 
