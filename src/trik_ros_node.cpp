@@ -43,7 +43,7 @@ class Subscriber
 {
 protected:
   ros::Subscriber sub_;
-  virtual void handle(T::ConstPtr& msg) = 0;
+  virtual void handle(typename T::ConstPtr& msg) = 0;
 };
 
 class MotorHandle : public Handle<trikControl::MotorInterface>, 
@@ -62,7 +62,7 @@ public:
   }
 
 private:  
-  static const std::string prefix = "motor_";
+  static constexpr std::string prefix = "motor_";
   void handle(const std_msgs::Int32::ConstPtr& msg) 
   {
     this->device_->setPower(msg->data);
@@ -89,7 +89,7 @@ public:
   }
 
 private:
-  static const std::string prefix = "sensor_";
+  static constexpr std::string prefix = "sensor_";
 };
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
