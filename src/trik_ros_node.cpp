@@ -11,7 +11,7 @@
 #include <QtGui/QApplication>
 
 int qtargc = 2;
-char *qtargv[] = {"trikroscpp_node", "-qws"};
+char *qtargv[] = {"trik_ros_node", "-qws"};
 
 trikControl::BrickInterface *brick;
 const int queue_length = 1000;
@@ -89,7 +89,7 @@ void ledCallback(const std_msgs::String::ConstPtr& msg) {
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "trikroscpp_node");
+  ros::init(argc, argv, "trik_ros_node");
 
   QApplication app(qtargc, qtargv);
   ros::NodeHandle n;

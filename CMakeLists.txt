@@ -122,10 +122,12 @@ target_link_libraries(trikroscpp_node
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-install(PROGRAMS
-  scripts/talker.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+
+### Scripts should be added here
+#install(PROGRAMS
+#  scripts/talker.py
+#  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 
 ## Mark executables and/or libraries for installation
 install(TARGETS trikroscpp_node

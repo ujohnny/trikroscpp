@@ -1,6 +1,6 @@
 <launch>
-  <group ns="test_launch">
-    <node pkg="trikroscpp" name="NAME" type="trikroscpp_node"/>
+  <group ns="trik_node">
+    <node pkg="trik_ros" name="NAME" type="trik_ros_node"/>
   </group>
 </launch>
 
