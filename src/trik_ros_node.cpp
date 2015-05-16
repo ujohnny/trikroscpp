@@ -58,7 +58,7 @@ public:
     std::string name(prefix);
     std::transform(port.begin(), port.end(), std::back_inserter(name), ::tolower);
     
-    this->sub_ = nh.subscribe(name.str(), queue_length, 
+    this->sub_ = nh.subscribe(name, queue_length, 
 			      &MotorHandle::handle, this);
   }
 
@@ -84,12 +84,12 @@ public:
     std::string name(prefix);
     std::transform(port.begin(), port.end(), std::back_inserter(name), ::tolower);
    
-    this->pub_ = nh.advertise<std_msgs::Int32>(name.str(), queue_length);
+    this->pub_ = nh.advertise<std_msgs::Int32>(name, queue_length);
   }
 
   void publish() const {
     std_msgs::Int32 msg;
-    msg.data = sensor_->read();
+    msg.data = device_->read();
     this->pub_.publish(msg);
   }
 
