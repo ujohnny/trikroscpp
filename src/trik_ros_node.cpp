@@ -20,8 +20,7 @@ template <class T>
 class Handle 
 {
 public:
-  Handle(T * const device,
-	 const std::string& port) : 
+  Handle(T * const device) : 
     device_(device) 
   {}
 
@@ -52,7 +51,8 @@ class MotorHandle : public Handle<trikControl::MotorInterface>,
 public:
   // need to change this
   MotorHandle(trikControl::MotorInterface * const device,
-	      const std::string& port)
+	      const std::string& port) :
+    Handle(device)
   {
     std::string name(prefix);
     std::transform(port.begin(), port.end(), std::back_inserter(name), ::tolower);
@@ -76,7 +76,8 @@ class SensorHandle : public Handle<trikControl::SensorInterface>,
 {
 public:
   SensorHandle(trikControl::SensorInterface * const device,
-	       const std::string& port) 
+	       const std::string& port) :
+    Handle(device)
   {
     std::string name(prefix);
     std::transform(port.begin(), port.end(), std::back_inserter(name), ::tolower);
@@ -94,7 +95,7 @@ private:
   static const std::string prefix;
 };
 
-const std::string SensorHanlde::prefix =  "sensor_";
+const std::string SensorHandle::prefix =  "sensor_";
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
   ROS_INFO("I heard: [%s]", msg->data.c_str());
