@@ -2,7 +2,8 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
 
-#include <sstream>
+#include <memory>
+#include <vector>
 
 #include <trikControl/brickFactory.h>
 #include <trikControl/brickInterface.h>
