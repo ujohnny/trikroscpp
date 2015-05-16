@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
 
   std::list<QString> dsensors(brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor).toStdList());
   std::transform(dsensors.begin(), dsensors.end(), std::back_inserter(vsh), initSensors);
-  
+  ROS_INFO("%d", vsh.size());
   /*  
   const QStringList& dsensors = brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor);
   for (QStringList::const_iterator it = dsensors.begin(); it != dsensors.end(); ++it) {
@@ -185,8 +185,6 @@ int main(int argc, char **argv) {
   while (ros::ok())
   {
     for (const std::shared_ptr<Publisher>& sh : vsh) {
-      ROS_INFO("%p", sh);
-      ROS_INFO("%p", *sh);
       sh->publish();
     }
     ros::spinOnce();
