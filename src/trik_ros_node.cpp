@@ -62,12 +62,14 @@ public:
   }
 
 private:  
-  static constexpr std::string prefix = "motor_";
+  static const std::string prefix;
   void handle(const std_msgs::Int32::ConstPtr& msg) 
   {
     this->device_->setPower(msg->data);
   }
 };
+
+const std::string MotorHandle::prefix = "motor_";
 
 class SensorHandle : public Handle<trikControl::SensorInterface>, 
 		     public Publisher 
@@ -89,8 +91,10 @@ public:
   }
 
 private:
-  static constexpr std::string prefix = "sensor_";
+  static const std::string prefix;
 };
+
+const std::string SensorHanlde::prefix =  "sensor_";
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
   ROS_INFO("I heard: [%s]", msg->data.c_str());
