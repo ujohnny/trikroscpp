@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 #include <trikControl/brickFactory.h>
 #include <trikControl/brickInterface.h>
