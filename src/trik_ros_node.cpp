@@ -125,12 +125,12 @@ int main(int argc, char **argv) {
     trikControl::SensorInterface *sns = brick->sensor(*it);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
-      SensorHandle sh(sns);
-      sh.init(n, it->toStdString());
+      SensorHandle sh(sns, it->toStdString());
       vsh.push_back(sh);
     }
   }
-  
+
+  /*  
   const QStringList& dsensors = brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor);
   for (QStringList::const_iterator it = dsensors.begin(); it != dsensors.end(); ++it) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
       vm.push_back(mh);
     }
   }
-
+  */
   while (ros::ok())
   {
     for (const SensorHandle& sh : vsh) {
