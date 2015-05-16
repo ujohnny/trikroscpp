@@ -16,52 +16,69 @@ char *qtargv[] = {"trik_ros_node", "-qws"};
 trikControl::BrickInterface *brick;
 const int queue_length = 1000;
 
-class Publisher {
+template <class T>
+class Handle 
+{
+public:
+  Handle(T * const device,
+	 const std::string& port) : 
+    device_(device) 
+  {}
+
+protected:
+  T *device_;
+};
+
+class Publisher 
+{
 public:
   virtual void publish() const = 0;
+
 protected:
   ros::Publisher pub_;
 };
 
-class Subscriber {
+template <class T>
+class Subscriber 
+{
 protected:
   ros::Subscriber sub_;
+  virtual void handle(T::ConstPtr& msg) = 0;
 };
 
-class MotorHandle : public Subscriber {
+class MotorHandle : public Handle<trikControl::MotorInterface>, 
+		    public Subscriber<std_msgs::Int32> 
+{
 public:
   // need to change this
-  MotorHandle(trikControl::MotorInterface * const device) :
-    motor_(device)
-  {}
-  
-  void init(ros::NodeHandle& nh, const std::string& port) { 
-    std::stringstream name;
-    name << "motor_" << port;
+  MotorHandle(trikControl::MotorInterface * const device,
+	      const std::string& port)
+  {
+    std::string name(prefix);
+    std::transform(port.begin(), port.end(), std::back_inserter(name), ::tolower);
     
     this->sub_ = nh.subscribe(name.str(), queue_length, 
 			      &MotorHandle::handle, this);
   }
 
-protected:
-  void handle(const std_msgs::Int32::ConstPtr& msg) {
-    this->motor_->setPower(msg->data);
+private:  
+  static const std::string prefix = "motor_";
+  void handle(const std_msgs::Int32::ConstPtr& msg) 
+  {
+    this->device_->setPower(msg->data);
   }
-
-private:
-  trikControl::MotorInterface * const motor_;
 };
 
-class SensorHandle : public Publisher {
+class SensorHandle : public Handle<trikControl::SensorInterface>, 
+		     public Publisher 
+{
 public:
-  SensorHandle(trikControl::SensorInterface * const device) :
-    sensor_(device)
-  {}
-
-  void init(ros::NodeHandle& nh, const std::string& port) { 
-    std::stringstream name;
-    name << "sensor_" << port;
-
+  SensorHandle(trikControl::SensorInterface * const device,
+	       const std::string& port) 
+  {
+    std::string name(prefix);
+    std::transform(port.begin(), port.end(), std::back_inserter(name), ::tolower);
+   
     this->pub_ = nh.advertise<std_msgs::Int32>(name.str(), queue_length);
   }
 
@@ -72,7 +89,7 @@ public:
   }
 
 private:
-  trikControl::SensorInterface * const sensor_;
+  static const std::string prefix = "sensor_";
 };
 
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
