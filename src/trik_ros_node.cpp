@@ -135,6 +135,9 @@ int main(int argc, char **argv) {
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("SENSOR is ready: [%s]", port.toStdString().c_str());
       return std::make_shared<SensorHandle>(sns, port.toStdString(), n);
+    } else {
+      // temp fix
+      return nullptr;
     }
   };
 
@@ -185,7 +188,9 @@ int main(int argc, char **argv) {
   while (ros::ok())
   {
     for (const std::shared_ptr<Publisher>& sh : vsh) {
-      sh->publish();
+      if (sh != nullptr) {
+	sh->publish();
+      }
     }
     ros::spinOnce();
     loop_rate.sleep();
