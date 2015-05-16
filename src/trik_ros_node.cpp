@@ -129,19 +129,19 @@ int main(int argc, char **argv) {
   std::vector< std::shared_ptr<Publisher> > vsh;
 
   // init 
-  auto initSensors = [](const QString& port) {
-    ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
-    trikControl::SensorInterface *sns = brick->sensor(*it);
+  auto initSensors = [&brick, &n] (const QString& port) {
+    ROS_INFO("SENSOR: [%s]", port.toStdString().c_str());
+    trikControl::SensorInterface *sns = brick->sensor(port);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
-      ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
-      return std::make_shared<SensorHandle>(sns, it->toStdString(), n);
+      ROS_INFO("SENSOR is ready: [%s]", port.toStdString().c_str());
+      return std::make_shared<SensorHandle>(sns, port.toStdString(), n);
     }
   };
 
-  std::list<QString> asensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor)->toStdList());
+  std::list<QString> asensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor).toStdList());
   std::transform(asensors.begin(), asensors.end(), std::back_inserter(vsh), initSensors);
 
-  std::list<QString> dsensors(brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor)->toStdList());
+  std::list<QString> dsensors(brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor).toStdList());
   std::transform(dsensors.begin(), dsensors.end(), std::back_inserter(vsh), initSensors);
   
   /*  
