@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(trikroscpp)
+project(trik_ros)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -90,20 +90,16 @@ include_directories(
   ${QT}
   ${Boost_INCLUDE_DIRS}
 )
-## Declare a cpp library
-# add_library(trikroscpp
-#   src/${PROJECT_NAME}/trikroscpp.cpp
-# )
 
 ## Declare a cpp executable
-add_executable(trikroscpp_node src/trikroscpp_node.cpp)
+add_executable(trik_ros_node src/trik_ros_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(trikroscpp_node trikroscpp_generate_messages_cpp)
+# add_dependencies(trik_ros_node trik_ros_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(trikroscpp_node
+target_link_libraries(trik_ros_node
   ${catkin_LIBRARIES}
   trikControl
   trikKernel
@@ -130,7 +126,7 @@ target_link_libraries(trikroscpp_node
 #)
 
 ## Mark executables and/or libraries for installation
-install(TARGETS trikroscpp_node
+install(TARGETS trik_ros_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
