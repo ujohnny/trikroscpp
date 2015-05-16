@@ -51,7 +51,8 @@ class MotorHandle : public Handle<trikControl::MotorInterface>,
 public:
   // need to change this
   MotorHandle(trikControl::MotorInterface * const device,
-	      const std::string& port) :
+	      const std::string& port,
+	      ros::NodeHandle& nh) :
     Handle(device)
   {
     std::string name(prefix);
@@ -76,7 +77,8 @@ class SensorHandle : public Handle<trikControl::SensorInterface>,
 {
 public:
   SensorHandle(trikControl::SensorInterface * const device,
-	       const std::string& port) :
+	       const std::string& port,
+	       ros::NodeHandle& nh) :
     Handle(device)
   {
     std::string name(prefix);
@@ -130,7 +132,7 @@ int main(int argc, char **argv) {
     trikControl::SensorInterface *sns = brick->sensor(*it);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
-      SensorHandle sh(sns, it->toStdString());
+      SensorHandle sh(sns, it->toStdString(), n);
       vsh.push_back(sh);
     }
   }
