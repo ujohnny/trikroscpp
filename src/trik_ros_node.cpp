@@ -185,6 +185,8 @@ int main(int argc, char **argv) {
   while (ros::ok())
   {
     for (const std::shared_ptr<Publisher>& sh : vsh) {
+      ROS_INFO("%p", sh);
+      ROS_INFO("%p", *sh);
       sh->publish();
     }
     ros::spinOnce();
