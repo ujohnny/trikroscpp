@@ -124,19 +124,24 @@ int main(int argc, char **argv) {
 
   brick = trikControl::BrickFactory::create(".", ".");
 
-  std::vector<SensorHandle> vsh;
+  std::vector< std::shared_ptr<Publisher> > vsh;
+
   // init 
-  const QStringList& asensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor));
-  for (QStringList::const_iterator it = asensors.begin(); it != asensors.end(); ++it) {
+  auto initSensors = [](const QString& port) {
     ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
     trikControl::SensorInterface *sns = brick->sensor(*it);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
-      SensorHandle sh(sns, it->toStdString(), n);
-      vsh.push_back(sh);
+      return std::make_shared<SensorHandle>(sns, it->toStdString(), n);
     }
-  }
+  };
 
+  std::list<QString> asensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor)->toStdList());
+  std::transform(asensors.begin(), asensors.end(), std::back_inserter(vsh), initSensors);
+
+  std::list<QString> dsensors(brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor)->toStdList());
+  std::transform(dsensors.begin(), dsensors.end(), std::back_inserter(vsh), initSensors);
+  
   /*  
   const QStringList& dsensors = brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor);
   for (QStringList::const_iterator it = dsensors.begin(); it != dsensors.end(); ++it) {
@@ -177,8 +182,8 @@ int main(int argc, char **argv) {
   */
   while (ros::ok())
   {
-    for (const SensorHandle& sh : vsh) {
-      sh.publish();
+    for (const std::shared_ptr<Publisher>& sh : vsh) {
+      sh->publish();
     }
     ros::spinOnce();
     loop_rate.sleep();
