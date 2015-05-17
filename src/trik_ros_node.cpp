@@ -64,12 +64,14 @@ public:
 			      &MotorHandle::handle, this);
   }
 
-private:  
-  static const std::string prefix;
+protected:
   void handle(const std_msgs::Int32::ConstPtr& msg) 
   {
     this->device_->setPower(msg->data);
   }
+
+private:  
+  static const std::string prefix;
 };
 
 const std::string MotorHandle::prefix = "motor_";
