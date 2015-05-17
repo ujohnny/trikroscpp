@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
   std::vector< std::shared_ptr<Publisher> > vsh;
 
   // init 
-  auto initSensors = [&brick, &n] (const QString& port) {
+  std::function f<std::shared_ptr<Publisher>(QString)> = [&n] (const QString& port) {
     ROS_INFO("SENSOR: [%s]", port.toStdString().c_str());
     trikControl::SensorInterface *sns = brick->sensor(port);
     if (sns->status() == trikControl::DeviceInterface::Status::ready) {
