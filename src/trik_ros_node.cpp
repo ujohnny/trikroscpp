@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
+#include <geometry_msgs/Vector3.h>
 
 #include <memory>
 #include <vector>
@@ -8,9 +9,6 @@
 
 #include <trikControl/brickFactory.h>
 #include <trikControl/brickInterface.h>
-#include <trikControl/ledInterface.h>
-
-#include <QtGui/QApplication>
 
 int qtargc = 2;
 char *qtargv[] = {"trik_ros_node", "-qws"};
@@ -101,6 +99,36 @@ private:
 
 const std::string SensorHandle::prefix =  "sensor_";
 
+class VectorSensorHandle : public Handle<trikControl::VectorSensorInterface>, 
+			   public Publisher 
+{
+public:
+  VectorSensorHandle(trikControl::VectorSensorInterface * const device,
+		     const std::string& port,
+		     ros::NodeHandle& nh) :
+    Handle(device)
+  {
+    std::string name(prefix);
+    std::transform(port.begin(), port.end(), std::back_inserter(name), ::tolower);
+   
+    this->pub_ = nh.advertise<geometry_msgs::Vector3>(name, queue_length);
+  }
+
+  void publish() const {
+    geometry_msgs::Vector3 msg;
+    QVector<int> v = device_->read();
+    msg.x = v[0]; 
+    msg.y = v[1];
+    msg.z = v[2];
+    this->pub_.publish(msg);
+  }
+
+private:
+  static const std::string prefix;
+};
+
+const std::string VectorSensorHandle::prefix =  "vsensor_";
+
 void ledCallback(const std_msgs::String::ConstPtr& msg) {
   ROS_INFO("I heard: [%s]", msg->data.c_str());
   trikControl::LedInterface *led = brick->led();
@@ -146,20 +174,12 @@ int main(int argc, char **argv) {
 
   std::list<QString> dsensors(brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor).toStdList());
   std::transform(dsensors.begin(), dsensors.end(), std::back_inserter(vsh), initSensors);
-  ROS_INFO("%d", vsh.size());
-  /*  
-  const QStringList& dsensors = brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor);
-  for (QStringList::const_iterator it = dsensors.begin(); it != dsensors.end(); ++it) {
-    ROS_INFO("SENSOR: [%s]", it->toStdString().c_str());
-    trikControl::SensorInterface *sns = brick->sensor(*it);
-    if (sns->status() == trikControl::DeviceInterface::Status::ready) {
-      ROS_INFO("SENSOR is ready: [%s]", it->toStdString().c_str());
-      SensorHandle sh(sns);
-      sh.init(n, it->toStdString());
-      vsh.push_back(sh);
-    }
-  }
 
+  vsh.push_back(std::make_shared<VectorSensorHandle>(brick->accelerometer(), "accelerometer", n));
+  vsh.push_back(std::make_shared<VectorSensorHandle>(brick->gyroscope(), "gyroscope", n));
+  
+  /*  
+  
   std::vector<MotorHandle *> vm;
   const QStringList& pmotors = brick->motorPorts(trikControl::MotorInterface::Type::powerMotor);
   for (QStringList::const_iterator it = pmotors.begin(); it != pmotors.end(); ++it) {
