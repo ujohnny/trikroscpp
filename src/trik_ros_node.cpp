@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
       return std::make_shared<SensorHandle>(sns, port.toStdString(), n);
     } else {
       // temp fix
-      return NULL;
+      return std::shared_ptr<Publisher>();
     }
   };
 
@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
   while (ros::ok())
   {
     for (const std::shared_ptr<Publisher>& sh : vsh) {
-      if (sh != NULL) {
+      if (sh) {
 	sh->publish();
       }
     }
