@@ -44,7 +44,6 @@ class Subscriber
 {
 protected:
   ros::Subscriber sub_;
-  virtual void handle(typename T::ConstPtr& msg) = 0;
 };
 
 class MotorHandle : public Handle<trikControl::MotorInterface>, 
@@ -64,14 +63,12 @@ public:
 			      &MotorHandle::handle, this);
   }
 
-protected:
+private:  
+  static const std::string prefix;
   void handle(const std_msgs::Int32::ConstPtr& msg) 
   {
     this->device_->setPower(msg->data);
   }
-
-private:  
-  static const std::string prefix;
 };
 
 const std::string MotorHandle::prefix = "motor_";
