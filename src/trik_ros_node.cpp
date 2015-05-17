@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
 
   QApplication app(qtargc, qtargv);
   ros::NodeHandle n;
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(100); // 100 Hz
 
   const int queue_length = 1000;
   ros::Subscriber sub = n.subscribe("trikLed", queue_length, ledCallback);
