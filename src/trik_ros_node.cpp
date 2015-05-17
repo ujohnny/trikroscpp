@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
       return std::make_shared<SensorHandle>(sns, port.toStdString(), n);
     } else {
       // temp fix
-      return nullptr;
+      return NULL;
     }
   };
 
@@ -167,6 +167,7 @@ int main(int argc, char **argv) {
     trikControl::MotorInterface *mi = brick->motor(*it);
     if (mi->status() == trikControl::DeviceInterface::Status::ready) {
       ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
+
       MotorHandle *mh = new MotorHandle(mi);
       mh->init(n, it->toStdString());
       vm.push_back(mh);
@@ -188,7 +189,7 @@ int main(int argc, char **argv) {
   while (ros::ok())
   {
     for (const std::shared_ptr<Publisher>& sh : vsh) {
-      if (sh != nullptr) {
+      if (sh != NULL) {
 	sh->publish();
       }
     }

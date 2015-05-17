@@ -1,6 +1,0 @@
-<launch>
-  <group ns="trik_node">
-    <node pkg="trik_ros" name="NAME" type="trik_ros_node"/>
-  </group>
-</launch>
-
