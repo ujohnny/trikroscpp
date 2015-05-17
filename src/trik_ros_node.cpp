@@ -156,8 +156,6 @@ int main(int argc, char **argv) {
 
   brick = trikControl::BrickFactory::create(".", ".");
 
-  std::vector< std::shared_ptr<Publisher> > vsh;
-
   // init 
   auto initSensors = [&n] (const QString& port) {
     ROS_INFO("SENSOR: [%s]", port.toStdString().c_str());
@@ -171,43 +169,35 @@ int main(int argc, char **argv) {
     }
   };
 
+  std::vector<std::shared_ptr<Publisher> > vsh;
   std::list<QString> asensors(brick->sensorPorts(trikControl::SensorInterface::Type::analogSensor).toStdList());
-  std::transform(asensors.begin(), asensors.end(), std::back_inserter(vsh), initSensors);
-
   std::list<QString> dsensors(brick->sensorPorts(trikControl::SensorInterface::Type::digitalSensor).toStdList());
+
+  std::transform(asensors.begin(), asensors.end(), std::back_inserter(vsh), initSensors);
   std::transform(dsensors.begin(), dsensors.end(), std::back_inserter(vsh), initSensors);
 
   vsh.push_back(std::make_shared<VectorSensorHandle>(brick->accelerometer(), "accelerometer", n));
   vsh.push_back(std::make_shared<VectorSensorHandle>(brick->gyroscope(), "gyroscope", n));
   
-  /*  
-  
-  std::vector<MotorHandle *> vm;
-  const QStringList& pmotors = brick->motorPorts(trikControl::MotorInterface::Type::powerMotor);
-  for (QStringList::const_iterator it = pmotors.begin(); it != pmotors.end(); ++it) {
-    ROS_INFO("MOTOR: [%s]", it->toStdString().c_str());
-    trikControl::MotorInterface *mi = brick->motor(*it);
-    if (mi->status() == trikControl::DeviceInterface::Status::ready) {
-      ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
-
-      MotorHandle *mh = new MotorHandle(mi);
-      mh->init(n, it->toStdString());
-      vm.push_back(mh);
+  auto initMotors = [&n] (const QString& port) {
+    ROS_INFO("MOTOR: [%s]", port.toStdString().c_str());
+    trikControl::MotorInterface *m = brick->motor(port);
+    if (m->status() == trikControl::DeviceInterface::Status::ready) {
+      ROS_INFO("MOTOR is ready: [%s]", port.toStdString().c_str());
+      return std::make_shared<MotorHandle>(m, port.toStdString(), n);
+    } else {
+      // temp fix
+      return std::shared_ptr<MotorHandle>();
     }
-  }
+  };
 
-  const QStringList& smotors = brick->motorPorts(trikControl::MotorInterface::Type::servoMotor);
-  for (QStringList::const_iterator it = smotors.begin(); it != smotors.end(); ++it) {
-    ROS_INFO("MOTOR: [%s]", it->toStdString().c_str());
-    trikControl::MotorInterface *mi = brick->motor(*it);
-    if (mi->status() == trikControl::DeviceInterface::Status::ready) {
-      ROS_INFO("MOTOR is ready: [%s]", it->toStdString().c_str());
-      MotorHandle *mh = new MotorHandle(mi);
-      mh->init(n, it->toStdString());
-      vm.push_back(mh);
-    }
-  }
-  */
+  std::vector<std::shared_ptr<MotorHandle> > vm;
+  std::list<QString> pmotors(brick->motorPorts(trikControl::MotorInterface::Type::powerMotor).toStdList());
+  std::list<QString> smotors(brick->motorPorts(trikControl::MotorInterface::Type::servoMotor).toStdList());
+
+  std::transform(pmotors.begin(), pmotors.end(), std::back_inserter(vm), initMotors);
+  std::transform(smotors.begin(), smotors.end(), std::back_inserter(vm), initMotors);
+
   while (ros::ok())
   {
     for (const std::shared_ptr<Publisher>& sh : vsh) {
