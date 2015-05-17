@@ -10,6 +10,8 @@
 #include <trikControl/brickFactory.h>
 #include <trikControl/brickInterface.h>
 
+#include <QtGui/QApplication>
+
 int qtargc = 2;
 char *qtargv[] = {"trik_ros_node", "-qws"};
 
