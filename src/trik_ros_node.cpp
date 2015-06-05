@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
 
   QApplication app(qtargc, qtargv);
   ros::NodeHandle n;
-  ros::Rate loop_rate(100); // 100 Hz
+  ros::Rate loop_rate(20); // 100 Hz
 
   const int queue_length = 1000;
   ros::Subscriber sub = n.subscribe("trikLed", queue_length, ledCallback);
@@ -175,8 +175,13 @@ int main(int argc, char **argv) {
   std::transform(asensors.begin(), asensors.end(), std::back_inserter(vsh), initSensors);
   std::transform(dsensors.begin(), dsensors.end(), std::back_inserter(vsh), initSensors);
 
-  vsh.push_back(std::make_shared<VectorSensorHandle>(brick->accelerometer(), "accelerometer", n));
-  vsh.push_back(std::make_shared<VectorSensorHandle>(brick->gyroscope(), "gyroscope", n));
+  if (brick->accelerometer() != null) {
+    vsh.push_back(std::make_shared<VectorSensorHandle>(brick->accelerometer(), "accelerometer", n));
+  }
+  
+  if (brick->gyroscope() != null) {
+    vsh.push_back(std::make_shared<VectorSensorHandle>(brick->gyroscope(), "gyroscope", n));
+  }
   
   auto initMotors = [&n] (const QString& port) {
     ROS_INFO("MOTOR: [%s]", port.toStdString().c_str());
