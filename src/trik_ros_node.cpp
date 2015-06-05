@@ -175,11 +175,11 @@ int main(int argc, char **argv) {
   std::transform(asensors.begin(), asensors.end(), std::back_inserter(vsh), initSensors);
   std::transform(dsensors.begin(), dsensors.end(), std::back_inserter(vsh), initSensors);
 
-  if (brick->accelerometer() != null) {
+  if (brick->accelerometer() != NULL) {
     vsh.push_back(std::make_shared<VectorSensorHandle>(brick->accelerometer(), "accelerometer", n));
   }
   
-  if (brick->gyroscope() != null) {
+  if (brick->gyroscope() != NULL) {
     vsh.push_back(std::make_shared<VectorSensorHandle>(brick->gyroscope(), "gyroscope", n));
   }
   
